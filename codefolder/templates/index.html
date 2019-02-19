@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <H1>This page verify If your Metamask wallet exist</H1>
+    <H2>and shows Ethereum address and your balance</H2>
+    <title>Metamask validator</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="favicon.ico" />
+    </head>
+<body>
+<hr>
+<br/>
+<br/>
+<br/>
+    <form name="myForm">
+          <table class="inputPart">
+                <tr>
+                    <td><img id="decisionpic" src="Failred.png" alt="Fail Icon" width="24" height="24"></td>
+                    <td><label id="vermetamask" class="red-text">Metamask should be installed</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><img id="decisionpicrop" src="Failred.png" alt="Fail Icon" width="24" height="24"></td>
+                    <td><label id="vermetamasknet" class="red-text">Ropsten Testnet should be selected</label></td>
+                    <td></td>
+                </tr>
+                 
+          </table>
+    </form>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <script type="text/javascript" src="verification.js"></script>
+    <script>
+        window.addEventListener('load', function () {
+            init();
+        });
+    </script>
+    
+</body>
+</html>

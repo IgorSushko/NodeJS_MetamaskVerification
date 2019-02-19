@@ -1,0 +1,55 @@
+.inputPart{
+    width: 100%;
+}
+.inputPart td{
+width: 33%;
+text-align: center;
+}
+.headTitle{
+    text-align: center; 
+}
+.links-text{
+    font-size: 16pt;
+    margin: 25px;
+    color: #232323;
+    }
+.Error404-text{
+    font-size: 32pt;
+    margin: 25px;
+    color: #232323;
+}
+.EJSviewHead{
+    width: 100%;
+    border: 1px double #080808; 
+}
+.EJSviewHead td{
+    width: 20%;
+    text-align: center;
+    border: 1px double #080808;
+    color: #ffffff;
+    background-color: #000000;
+    font-weight: bold;
+}
+.EJSview{
+    width: 100%;
+    border: 1px double #080808; 
+}
+.EJSview td{
+    width: 20%;
+    text-align: center;
+    font-size: 12pt;
+    overflow: hidden;
+    border: 1px double #0a0a0a; 
+}
+.red-text{
+    text-align: center;
+    color: #f71717;
+    font-weight: bold;
+    font-size: 17pt;
+}
+.green-text{
+    text-align: center;
+    color: #29be0b;
+    font-weight: bold;
+    font-size: 17pt;
+}
