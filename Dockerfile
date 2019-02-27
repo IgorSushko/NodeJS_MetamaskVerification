@@ -23,7 +23,9 @@ RUN npm install --unsafe-perm --global ethereumjs-wallet@0.6.0
 RUN npm install --unsafe-perm --global truffle-hdwallet-provider@0.0.3
 RUN npm install --unsafe-perm --global ethereumjs-util
 RUN npm install --unsafe-perm --global web3
-
+RUN npm install --unsafe-perm --global truffle
+RUN npm install --unsafe-perm --global bitcoinjs-lib^3.0.0
+RUN npm install --unsafe-perm --global bip32-utils
 ADD codefolder /usr/codefolder
 
 WORKDIR /usr/codefolder

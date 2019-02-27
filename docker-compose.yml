@@ -5,7 +5,7 @@ services:
     container_name: metamaskverig
     restart: always
     ports:
-      - "62000:8080"
+      - "62001:8080"
     volumes:
        - ./logs/:/root/.pm2/logs/
        - ./codefolder/:/usr/codefolder/
