@@ -1,9 +1,9 @@
 module.exports = {
-  PORT : 8080,
+  PORT: 8080,
   DB_HOST: 'dbtestn',
-  DB_NAME : 'testmysql',
-  DB_USER : 'igor',
-  DB_PASS : 'nicecti1!',
+  DB_NAME: 'testmysql',
+  DB_USER: 'igor',
+  DB_PASS: 'nicecti1!',
   TEMPLATE_PATH: `${process.env.FILES_ROOT_FOLDER}/templates/index.html`,
   TEMPLATE_FILES: {
     '/style.css': {
