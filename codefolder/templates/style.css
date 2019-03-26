@@ -1,3 +1,16 @@
+.body{
+margin:0;
+padding:0; 
+}
+.h1{
+margin:0;   
+}
+.head{
+    background: #CFD8DC;
+    background-repeat: no-repeat;
+    background-size: cover; 
+
+}
 .inputPart{
     width: 100%;
 }
@@ -49,7 +62,44 @@ text-align: center;
 }
 .green-text{
     text-align: center;
-    color: #29be0b;
+    color:#424242;
     font-weight: bold;
     font-size: 17pt;
 }
+.email-box{
+    height: 40px;
+    justify-content: center;
+    display: flex; /*its better to use inline-flex*/
+      }
+  .email-box i{
+    background: #2f3542;
+    width: 40px;
+    line-height: 40px;
+  }
+  .tbox,.btn{
+    border: none;
+    outline: none;
+  }
+  .tbox{
+    width: 0px;
+    transition: 0.6s;
+  }
+  .email-box:hover > .tbox,.tbox:focus{
+    width: 290px;
+    padding: 0 10px;
+  }
+  .btn{
+    background: #2f3542;
+    color: white;
+    padding: 0 10px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .transhash{
+    visibility: hidden;
+    text-align: center;
+    color:#424242;
+    font-weight: bold;
+    font-size: 17pt;
+  }
+    

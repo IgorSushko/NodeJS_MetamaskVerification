@@ -1,8 +1,8 @@
 version: '2'
 services:
   metamaskver:
-    image: metamaskverig
-    container_name: metamaskverig
+    image: metamaskverign
+    container_name: metamaskverign
     restart: always
     ports:
       - "62001:8080"
