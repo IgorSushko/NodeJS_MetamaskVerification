@@ -2,7 +2,7 @@ const currentUser = {
   account: '',
 };
 
-const okSrc = './img/Okgrey.png';
+const okSrc = './img/okgrey.png';
 
 
 async function getBalance(address) {

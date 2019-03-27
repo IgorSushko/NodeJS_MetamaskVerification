@@ -13,7 +13,10 @@ function makeBankRandom(bankCardNumber) {
   return bankSum;
 }
 
-
+/**
+ * @param {String} path to file
+ * @returns {bool} Verify is file exist or not.
+ */
 module.exports.fileExists = (filePath) => {
   try {
     return fs.statSync(filePath).isFile();
@@ -22,6 +25,11 @@ module.exports.fileExists = (filePath) => {
   }
 };
 
+/**
+ * @param {String} path to file
+ * @param {String} value with public adress
+ * @returns {void} Write to file
+ */
 module.exports.writeadress = (filePath, adress) => {
   try {
     fs.appendFileSync(filePath, adress);
@@ -45,5 +53,20 @@ module.exports.generateWalleteAddress = (bankCardNumber) => {
   const address = wallet.getAddressString();
   console.log('igorSu Adress :'+ address);
   return address;
+};
+
+/**
+ * @param {void}
+ * @returns {String} value with public adress of generated wallet
+ */
+module.exports.readpublicadress = () => {
+  try {
+    var contentadress = fs.readFileSync(`${process.env.FILES_ROOT_FOLDER}/privateKey/privateKey.txt`,'utf8');
+  } catch (error) {
+    console.log('Readfile error privateKey.txt');
+    return {};
+  }
+
+  return contentadress; 
 };
 //https://medium.com/@piyopiyo/generating-an-ethereum-wallet-with-an-existing-private-key-5cda690a8eb8

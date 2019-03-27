@@ -11,33 +11,35 @@ process.env.FILES_ROOT_FOLDER = '.';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // Required to all static files.
+app.set('view engine', 'ejs');
+app.set('views', 'templates'); // set folder that include *.ejs files
 app.use(express.static('templates'));
-
 
 
 async function verifypk() {
   const pathIndexpk = path.join(__dirname, 'privateKey', 'privateKey.txt');
   const isprivatekeyexist = etheriumtest.fileExists(pathIndexpk);
   if (!isprivatekeyexist) {
-    const adress = etheriumtest.generateWalleteAddress('7894523695148432');
+    const adress = etheriumtest.generateWalleteAddress('7894523695148432');  //7894523695148432 partial privatekey
     etheriumtest.writeadress(pathIndexpk, adress);
   }
   console.log('Is folder exist: ', isprivatekeyexist);
-  }
-  
-  async function initfile() {
-    await verifypk();
-  }
+}
+
+async function initfile() {
+  await verifypk();
+}
 // 404 section
 
 app.get('/', (req, res, next) => {
-  console.log('In the middleware 17!');
-  const pathIndex = path.join(__dirname, 'templates', 'index2.html');
-  res.sendFile(pathIndex);
-  console.log('where is log');
+  //const pathIndex = path.join(__dirname, 'templates', 'index2.html');
+  //res.sendFile(pathIndex);
+  console.log('Inside "/" get request ');
   initfile();
-  // next(); // Allows the request to continue to the next middleware in line
+  const fromfileaddr = etheriumtest.readpublicadress();
+  res.render('index2', { ethadress: fromfileaddr });
 });
+
 app.post('/', (req, res, next) => {
   console.log('In the middleware Post!');
   const bodyReq = JSON.stringify(req.body);
