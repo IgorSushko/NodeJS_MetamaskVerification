@@ -4,6 +4,26 @@ function makehashglobal(hash) {
   globalhash = hash;
 }
 
+/* function getAdrressFromServer() {
+  var adr = '';
+  fetch('http://localhost:62001/restapi/getadress')
+       .then(res => res.json())
+       .then((resData) => {adr = resData})
+       .catch(err => console.log('ResData Error: ', err));
+       return adr;
+}  */
+
+async function tjCustomerName() {
+  const response = await fetch('http://localhost:62001/restapi/getadress', {});
+  const json = await response.json();
+
+  return json.adress;
+}
+async function getAdrressFromServer() {
+  const t1 = await tjCustomerName();
+  return t1;
+}
+
 function getTransactionReceiptPromise(hash) {
   // here we just promisify getTransactionReceipt function for convenience
   return new Promise(((resolve, reject) => {
@@ -20,22 +40,24 @@ function wait(milleseconds) {
 
 async function payEther() {
   document.getElementById('transactioninprogress').style.visibility = 'visible';
+  const getfromserver = await getAdrressFromServer();
+  console.log('getfromserver: ', getfromserver);
   try {
-    const datas = document.getElementById('hiddenadress').textContent;
-    console.log('adress from page', datas);
+    //const datas = document.getElementById('hiddenadress').textContent;
+   // console.log('adress from page', datas);
     //const receiver = '0x250ce03d2f095fe3482fb237a23e172af08fbf5c';
     const sender = currentUser.account;
     const waitforhash = web3.eth.sendTransaction(
       {
-        to: datas,
+        to: getfromserver,
         from: sender,
         value: web3.toWei('0.025', 'ether')
       }, function (err, hash) {
-        if (err.message.includes("User denied transaction signature")) {
-          console.log('submit was corrupted: ', err);
-          document.getElementById('transactioninprogress').style.visibility = 'hidden';
-          throw new Error('Fatal error!!!')
-        }
+        //if (err.message.includes("User denied transaction signature")) {
+        //  console.log('submit was corrupted: ', err);
+         // document.getElementById('transactioninprogress').style.visibility = 'hidden';
+         // throw new Error('Fatal error!!!')
+        //}
         console.log('after transaction: ', hash);
         makehashglobal(hash);
       }

@@ -9,7 +9,7 @@ const app = express();
 process.env.FILES_ROOT_FOLDER = '.';
 
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // bodyParser.urlencoded({ extended: false })
 // Required to all static files.
 app.set('view engine', 'ejs');
 app.set('views', 'templates'); // set folder that include *.ejs files
@@ -30,14 +30,23 @@ async function initfile() {
   await verifypk();
 }
 // 404 section
-
-app.get('/', (req, res, next) => {
-  //const pathIndex = path.join(__dirname, 'templates', 'index2.html');
-  //res.sendFile(pathIndex);
-  console.log('Inside "/" get request ');
+// GET http://localhost:62001/restapi/getadress
+app.get('/restapi/getadress', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   initfile();
   const fromfileaddr = etheriumtest.readpublicadress();
-  res.render('index2', { ethadress: fromfileaddr });
+  res.status(200).json({ adress: fromfileaddr });
+});
+
+app.get('/', (req, res, next) => {
+  const pathIndex = path.join(__dirname, 'templates', 'index2.html');
+  res.sendFile(pathIndex);
+  console.log('Inside "/" get request ');
+  //initfile();
+  //const fromfileaddr = etheriumtest.readpublicadress();
+  //res.render('index2', { ethadress: fromfileaddr });
 });
 
 app.post('/', (req, res, next) => {
