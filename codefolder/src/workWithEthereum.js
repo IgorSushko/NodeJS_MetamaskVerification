@@ -3,6 +3,7 @@ module.paths.push('/usr/lib/node_modules');
 //const hdkey = require('ethereumjs-wallet/hdkey');
 const Wallet = require('ethereumjs-wallet');
 const EthUtil = require('ethereumjs-util');
+const path = require('path');
 const fs = require('fs');
 
 // Generate pseudorandom part that based on CardNumber
@@ -61,7 +62,8 @@ module.exports.generateWalleteAddress = (bankCardNumber) => {
  */
 module.exports.readpublicadress = () => {
   try {
-    var contentadress = fs.readFileSync(`${process.env.FILES_ROOT_FOLDER}/privateKey/privateKey.txt`,'utf8');
+    const pathIndexpks = path.join(path.dirname(process.mainModule.filename), 'privateKey', 'privateKey.txt');
+    var contentadress = fs.readFileSync(pathIndexpks,'utf8');
   } catch (error) {
     console.log('Readfile error privateKey.txt');
     return {};
