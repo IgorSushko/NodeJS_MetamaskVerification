@@ -1,18 +1,7 @@
-var globalhash;
-
-function makehashglobal(hash) {
-  globalhash = hash;
-}
-
-async function tjCustomerName() {
+async function getAdrressFromServer() {
   const response = await fetch('http://localhost:62001/restapi/getadress', {});
   const json = await response.json();
   return json.adress;
-}
-
-async function getAdrressFromServer() {
-  const t1 = await tjCustomerName();
-  return t1;
 }
 
 function getTransactionReceiptPromise(hash) {
@@ -29,33 +18,36 @@ function wait(milleseconds) {
   return new Promise(resolve => setTimeout(resolve, milleseconds));
 }
 
-async function payEther() {
-  document.getElementById('transactioninprogress').style.visibility = 'visible';
-  const getfromserver = await getAdrressFromServer();
-  console.log('getfromserver: ', getfromserver);
-  try {
+function sendTransaction(getfromserver) {
+  return new Promise((resolve, reject) => {
     const sender = currentUser.account;
     const waitforhash = web3.eth.sendTransaction(
       {
         to: getfromserver,
         from: sender,
-        value: web3.toWei('0.025', 'ether')
-      }, function (err, hash) {
+        value: web3.toWei('0.025', 'ether'),
+      }, (err, hash) => {
+        if (err) {
+          reject(err);
+        }
         console.log('after transaction: ', hash);
-        makehashglobal(hash);
-      }
+        resolve(hash);
+      },
     );
-    while (globalhash === undefined) {
-      // we are going to check every second if transation is mined or not, once it is mined we'll leave the loop
-      console.log('from the loop: ', waitforhash);
-      await wait(1000);
-    }
-    console.log('globalhash: ', globalhash);
+  });
+}
 
+async function payEther() {
+  document.getElementById('transactionError').style.visibility = 'visible';
+  document.getElementById('transactioninprogress').style.visibility = 'visible';
+  const getfromserver = await getAdrressFromServer();
+  console.log('getfromserver: ', getfromserver);
+  try {
+    const globalhash = await sendTransaction(getfromserver);
     let receipt = null;
     console.log('receipt inside');
     while (receipt === null) {
-    // we are going to check every second if transation is mined or not, once it is mined we'll leave the loop
+      // we are going to check every second if transation is mined or not, once it is mined we'll leave the loop
       receipt = await getTransactionReceiptPromise(globalhash);
       console.log('receipt inside loop');
       await wait(1000);
@@ -65,7 +57,9 @@ async function payEther() {
     console.log('Receipt: ', receipt);
   } catch (err) {
     console.log('Try was corrupted: ', err);
-    return;
+    document.getElementById('transactioninprogress').style.visibility = 'none';
+    document.getElementById('transactionError').style.visibility = 'visible';
+    document.getElementById('transactionError').innerText = err.toString();
   }
 }
-//https://medium.com/@dan_43404/handling-metamask-rejections-532a4a41caf
+// https://medium.com/@dan_43404/handling-metamask-rejections-532a4a41caf
