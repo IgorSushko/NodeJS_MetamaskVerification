@@ -1,26 +1,28 @@
 const path = require('path');
-const etheriumtest = require('../src/workWithEthereum.js');
 
-
-async function verifypk() {
-  const pathIndexpk = path.join(path.dirname(process.mainModule.filename), 'privateKey', 'privateKey.txt');
-  const isprivatekeyexist = etheriumtest.fileExists(pathIndexpk);
-  if (!isprivatekeyexist) {
-    const adress = etheriumtest.generateWalleteAddress('7894523695148432');  //7894523695148432 partial privatekey
-    etheriumtest.writeadress(pathIndexpk, adress);
+class EthApi {
+  constructor() {
+    this.etheriumtest = require('../src/workWithEthereum.js');
+    const pathIndexpk = path.join(path.dirname(process.mainModule.filename), 'privateKey', 'privateKey.txt');
+    const isprivatekeyexist = this.etheriumtest.fileExists(pathIndexpk);
+    if (!isprivatekeyexist) {
+      const adress = this.etheriumtest.generateWalleteAddress('7894523695148432');  //7894523695148432 partial privatekey
+      this.etheriumtest.writeadress(pathIndexpk, adress);
+    }
+    console.log('Is folder exist: ', isprivatekeyexist);
   }
-  console.log('Is folder exist: ', isprivatekeyexist);
+
+  async getAddress() {
+    return this.etheriumtest.readpublicadress();
+  }
 }
 
-async function initfile() {
-  await verifypk();
-}
+
+const EthApiController = new EthApi();
 
 exports.provideAddress = (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  initfile();
-  const fromfileaddr = etheriumtest.readpublicadress();
-  res.status(200).json({ adress: fromfileaddr });
+  res.status(200).json({ adress: EthApiController.getAddress() });
 };
