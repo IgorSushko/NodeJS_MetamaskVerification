@@ -12,7 +12,7 @@ class EthApi {
     console.log('Is folder exist: ', isprivatekeyexist);
   }
 
-  async getAddress() {
+  getAddress() {
     return this.etheriumtest.readpublicadress();
   }
 }

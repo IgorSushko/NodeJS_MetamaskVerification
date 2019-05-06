@@ -61,7 +61,9 @@
         <tr>
             <td colspan="3"><label id="transactionError" class="transhash"></label></td>
         </tr>
-
+        <tr>
+            <td colspan="3"><label id="transactionResultFromServer" class="transhash"></label></td>
+        </tr>
 
 
     </table>
@@ -76,11 +78,14 @@
         init();
     });
 </script>
-<script type="text/javascript" src="regexpTest.js"></script>
+<script type="text/javascript" src="socket.io.js"></script>
+<script type="text/javascript" src="clientSideETH.js"></script>
 <script>
     document.getElementById("presspay").addEventListener("click", function () {
         payEther();
     });
 </script>
+<!--<script src="/socket.io/socket.io.js"></script> -->
+<!--<script>var socket = io.connect('http://localhost:62001');</script>  -->
 </body>
 </html>
