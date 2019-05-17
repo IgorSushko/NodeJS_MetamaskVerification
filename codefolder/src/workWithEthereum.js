@@ -131,7 +131,16 @@ module.exports.returnBalance = () => getBalanceCorrect();
 
 module.exports.readTransactionCorrect = hash => new Promise((resolve, reject) => {
   web3js.eth.getTransaction(hash, (err, data) => {
-    if (err !== null) reject(err);
+    if (err !== null) {reject(err);
+    console.log('inside promise readtransaction') }
+    else resolve(data);
+  });
+});
+
+module.exports.readTransactionCorrectBlock = (hashStringOrNumber, index) => new Promise((resolve, reject) => {
+  web3js.eth.getTransactionFromBlock(hashStringOrNumber, index, (err, data) => {
+    if (err !== null) {reject(err);
+    console.log('inside promise readTransactionCorrectBlock Reject'); }
     else resolve(data);
   });
 });

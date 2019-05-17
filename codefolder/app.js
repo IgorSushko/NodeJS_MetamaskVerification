@@ -16,6 +16,7 @@ io.on('connection', socket => {
 console.log('Client connected');
 });
 
+
 async function takeBalanceserver() {
   const balancce = await etheriumtest.returnBalance();
   console.log('takeBalanceserver() :', balancce);
@@ -23,10 +24,24 @@ async function takeBalanceserver() {
 }
 
 async function takeTransactionApproveServer(hash) {
+    try {
   const approve = await etheriumtest.readTransactionCorrect(hash);
   console.log('takeTransactionApproveServer(hash)hash :', hash);
   console.log('takeTransactionApproveServer(hash) :', approve);
   return approve;
+  } catch (error2) {
+    console.log('async function takeTransactionApproveServer: ', error2);
+  }
+}
+async function takeTransactionApproveServerBlock(hash,index) {
+  try {
+    const approve = await etheriumtest.readTransactionCorrectBlock(hash, index);
+    console.log('takeTransactionApproveServerBlock(hash)hash :', hash);
+    console.log('takeTransactionApproveServerBlock(hash)Result :', approve);
+    return approve;
+  } catch (error2) {
+    console.log('async function takeTransactionApproveServer: ', error2);
+  }
 }
 
 app.use(bodyParser.json()); // bodyParser.urlencoded({ extended: false })
@@ -43,13 +58,19 @@ io1.getIO().on('connection', function (socket) {
   
   socket.on('Receipt', function (data) {
     const transHash = utils.taketransactionHash(data);
+    const blockNumber = utils.blockNumber(data);
+    const index = utils.transactionIndex(data);
     console.log('FromClient: ', transHash);
+    console.log('FromClient blockNumber: ', blockNumber);
+    console.log('FromClient index: ', index);
     //const serverside = etheriumtest.returnTransDetails(transHash).then(console.log);
     takeBalanceserver().then((tempdata) => {socket.emit('Balance', { Balance: tempdata });});
-    takeTransactionApproveServer(transHash).then((transdata) => {socket.emit('TransactionDetails', { TransactionDetails: transdata })})
+
+    
+    takeTransactionApproveServerBlock(blockNumber,index).then((transdata) => {socket.emit('TransactionDetails', { TransactionDetails: transdata })})
    // console.log('Serverside: ',serverside);
     //console.log("Balance from server", balance);
-    
+     
   }); })
 
 app.use((req, res, next) => {
