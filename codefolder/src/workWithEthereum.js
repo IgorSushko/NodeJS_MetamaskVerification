@@ -73,7 +73,7 @@ module.exports.readpublicadress = () => {
     return {};
   }
 
-  return contentadress; 
+  return contentadress;
 };
 
 function wait(milleseconds) {
@@ -139,9 +139,12 @@ module.exports.readTransactionCorrect = hash => new Promise((resolve, reject) =>
 
 module.exports.readTransactionCorrectBlock = (hashStringOrNumber, index) => new Promise((resolve, reject) => {
   web3js.eth.getTransactionFromBlock(hashStringOrNumber, index, (err, data) => {
-    if (err !== null) {reject(err);
-    console.log('inside promise readTransactionCorrectBlock Reject'); }
-    else resolve(data);
+    if (err) {
+      reject({err: err, data: data});
+      console.log('inside promise readTransactionCorrectBlock Reject');
+    } else {
+      resolve(data);
+    }
   });
 });
 

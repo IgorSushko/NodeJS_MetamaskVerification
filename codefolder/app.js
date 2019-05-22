@@ -33,14 +33,17 @@ async function takeTransactionApproveServer(hash) {
     console.log('async function takeTransactionApproveServer: ', error2);
   }
 }
-async function takeTransactionApproveServerBlock(hash,index) {
+async function takeTransactionApproveServerBlock(blockHashOrNumber,index) {
   try {
-    const approve = await etheriumtest.readTransactionCorrectBlock(hash, index);
-    console.log('takeTransactionApproveServerBlock(hash)hash :', hash);
-    console.log('takeTransactionApproveServerBlock(hash)Result :', approve);
+    const approve = await etheriumtest.readTransactionCorrectBlock(blockHashOrNumber, index);
+    console.log('takeTransactionApproveServerBlock(blockHash)blockHash :', blockHashOrNumber);
+    console.log('takeTransactionApproveServerBlock(blockHash)Result :', approve);
     return approve;
-  } catch (error2) {
-    console.log('async function takeTransactionApproveServer: ', error2);
+  } catch (error) {
+    console.log('-!!!!!!!!!!!!!!!-');
+    console.log('async function takeTransactionApproveServer: ', error);
+    console.log('blockHashOrNumber', blockHashOrNumber)
+    console.log('index', index)
   }
 }
 
@@ -55,22 +58,31 @@ app.use('/', indexRoutes);
 app.use('/restapi', feedRoutes);
 
 io1.getIO().on('connection', function (socket) {
-  
-  socket.on('Receipt', function (data) {
-    const transHash = utils.taketransactionHash(data);
+
+  socket.on('Receipt', function (basicData) {
+    let data = JSON.parse(JSON.stringify(basicData));
+    if (data.Receipt) data = data.Receipt;
+    console.log('');
+    console.log('FromClient:', basicData);
+    const transHash = utils.transactionHash(data);
     const blockNumber = utils.blockNumber(data);
     const index = utils.transactionIndex(data);
-    console.log('FromClient: ', transHash);
+    console.log('FromClient transHash: ', transHash);
     console.log('FromClient blockNumber: ', blockNumber);
     console.log('FromClient index: ', index);
+
+
     //const serverside = etheriumtest.returnTransDetails(transHash).then(console.log);
     takeBalanceserver().then((tempdata) => {socket.emit('Balance', { Balance: tempdata });});
 
-    
-    takeTransactionApproveServerBlock(blockNumber,index).then((transdata) => {socket.emit('TransactionDetails', { TransactionDetails: transdata })})
-   // console.log('Serverside: ',serverside);
+    takeTransactionApproveServerBlock(blockNumber,index).then((transdata) => {
+      socket.emit('TransactionDetails', { TransactionDetails: transdata })
+    })
+
+    // console.log('Serverside: ',serverside);
     //console.log("Balance from server", balance);
-     
+
+
   }); })
 
 app.use((req, res, next) => {

@@ -59,6 +59,28 @@ function sendTransaction(getfromserver) {
   });
 }
 
+async function testServer() {
+  const socket = await initIO();
+  socket.on('TransactionDetails', function (data) {
+    console.log('SOCKET TransactionData from ServerSide :', data);
+    let transactionResultS = parseTransaction(data);
+    document.getElementById('transactionResultFromServer').style.visibility = 'visible';
+    document.getElementById('transactionResultFromServer').innerText ='TransactionResult from Server :' + transactionResultS.toString();
+  })
+  const testReceipt = {
+    blockHash: "0x2a799e8be4f0e62fe540966605e6c675aa968212b173877dedbd0ba425def182",
+    blockNumber: 5648440,
+    contractAddress: null,
+    cumulativeGasUsed: 2190990,
+    from: "0xc61a35fc5ca15d5ccb7038238771d90fd7a3d0c4",
+    gasUsed: 21000,
+    status: "0x1",
+    to: "0x250ce03d2f095fe3482fb237a23e172af08fbf5c",
+    transactionHash: "0x3396aab60a1eb23286643330c5dc421a5743414d254e6cee2cf14724c36d2bda",
+    transactionIndex: 26
+  }
+  socket.emit('Receipt', { Receipt: testReceipt });
+}
 async function payEther() {
   document.getElementById('transactionError').style.visibility = 'visible';
   document.getElementById('transactioninprogress').style.visibility = 'visible';
@@ -80,23 +102,24 @@ async function payEther() {
     document.getElementById('transactioninprogress').style.visibility = 'hidden';
     //socket.on('news', function (data) {
      // console.log(data);
-      
+
     //});
-    socket.emit('Receipt', { Receipt: receipt });
-    console.log('Receipt: ', receipt);
     socket.on('Balance', function (data) {
-      console.log('BalanceFromClient: ', data);
+      console.log('SOCKET BalanceFromClient: ', data);
       let balanceResult = parseBalance(data);
       document.getElementById('transactionError').style.visibility = 'visible';
       document.getElementById('transactionError').innerText ='Balance on remote wallet :' + balanceResult.toString();
     })
 
     socket.on('TransactionDetails', function (data) {
-      console.log('TransactionData from ServerSide :', data);
+      console.log('SOCKET TransactionData from ServerSide :', data);
       let transactionResultS = parseTransaction(data);
       document.getElementById('transactionResultFromServer').style.visibility = 'visible';
       document.getElementById('transactionResultFromServer').innerText ='TransactionResult from Server :' + transactionResultS.toString();
     })
+
+    socket.emit('Receipt', { Receipt: receipt });
+    console.log('SOCKET Receipt: ', receipt);
 
   } catch (err) {
     console.log('Try was corrupted: ', err);
