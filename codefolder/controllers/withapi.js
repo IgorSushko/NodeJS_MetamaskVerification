@@ -20,9 +20,20 @@ class EthApi {
 
 const EthApiController = new EthApi();
 
+function bookurl() {
+  return 'http://localhost:62001/downloadbook/book1';
+}
+
 exports.provideAddress = (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.status(200).json({ adress: EthApiController.getAddress() });
+};
+
+exports.provideurl = (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.status(200).json({ bookurl: bookurl() });
 };

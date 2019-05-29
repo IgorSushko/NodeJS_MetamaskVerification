@@ -1,5 +1,4 @@
 const path = require('path');
-const io = require('../src/socketio');
 
 
 exports.provideGetPageIndex = (req, res, next) => {

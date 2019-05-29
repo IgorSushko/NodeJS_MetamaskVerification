@@ -4,13 +4,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const feedRoutes = require('./routes/withapi');
 const indexRoutes = require('./routes/index2');
+const downloadRoutes = require('./routes/downloadlink');
 const io1 = require('./src/socketio');
 const utils = require('./src/utils');
 const etheriumtest = require('./src/workWithEthereum');
 
 const app = express();
 const server = app.listen(8080);
-//const io = require('socket.io')(server);
 const io = require('./src/socketio').init(server);
 io.on('connection', socket => {
 console.log('Client connected');
@@ -24,26 +24,12 @@ async function takeBalanceserver() {
 }
 
 async function takeTransactionApproveServer(hash) {
-    try {
-  const approve = await etheriumtest.readTransactionCorrect(hash);
-  console.log('takeTransactionApproveServer(hash)hash :', hash);
-  console.log('takeTransactionApproveServer(hash) :', approve);
-  return approve;
-  } catch (error2) {
-    console.log('async function takeTransactionApproveServer: ', error2);
-  }
-}
-async function takeTransactionApproveServerBlock(blockHashOrNumber,index) {
   try {
-    const approve = await etheriumtest.readTransactionCorrectBlock(blockHashOrNumber, index);
-    console.log('takeTransactionApproveServerBlock(blockHash)blockHash :', blockHashOrNumber);
-    console.log('takeTransactionApproveServerBlock(blockHash)Result :', approve);
+    const approve = await etheriumtest.readTransactionCorrect(hash);
     return approve;
-  } catch (error) {
+  } catch (error2) {
     console.log('-!!!!!!!!!!!!!!!-');
-    console.log('async function takeTransactionApproveServer: ', error);
-    console.log('blockHashOrNumber', blockHashOrNumber)
-    console.log('index', index)
+    console.log('async function takeTransactionApproveServer: ', error2);
   }
 }
 
@@ -57,6 +43,8 @@ app.use('/', indexRoutes);
 
 app.use('/restapi', feedRoutes);
 
+app.use('/downloadbook', downloadRoutes);
+
 io1.getIO().on('connection', function (socket) {
 
   socket.on('Receipt', function (basicData) {
@@ -67,22 +55,19 @@ io1.getIO().on('connection', function (socket) {
     const transHash = utils.transactionHash(data);
     const blockNumber = utils.blockNumber(data);
     const index = utils.transactionIndex(data);
-    console.log('FromClient transHash: ', transHash);
-    console.log('FromClient blockNumber: ', blockNumber);
-    console.log('FromClient index: ', index);
 
-
-    //const serverside = etheriumtest.returnTransDetails(transHash).then(console.log);
     takeBalanceserver().then((tempdata) => {socket.emit('Balance', { Balance: tempdata });});
 
-    takeTransactionApproveServerBlock(blockNumber,index).then((transdata) => {
-      socket.emit('TransactionDetails', { TransactionDetails: transdata })
+    takeTransactionApproveServer(transHash).then((transdata) => {
+      let serverCheck = JSON.parse(JSON.stringify(transdata));
+      if (utils.blockNumber(serverCheck)==blockNumber && utils.transactionIndex(serverCheck)==index){
+        socket.emit('TransactionDetails', { TransactionDetails:'Transaction approved by server' })
+        console.log('Transaction approved by server ');
+      } else {
+        socket.emit('TransactionDetails', { TransactionDetails:'Transaction is NOT approved by server' })
+        console.log('Transaction is NOT approved by server ');
+      }
     })
-
-    // console.log('Serverside: ',serverside);
-    //console.log("Balance from server", balance);
-
-
   }); })
 
 app.use((req, res, next) => {
@@ -90,11 +75,3 @@ app.use((req, res, next) => {
   const path404 = path.join(__dirname, 'templates', 'error404.html');
   res.status(404).sendFile(path404);
 });
-
-//io1.getIO().on('Receipt', function (data) {
-  //console.log(data);
-//});
-
-
-//const server = http.createServer(app);
-//server.listen(8080);}

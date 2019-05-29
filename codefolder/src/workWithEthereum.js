@@ -76,21 +76,6 @@ module.exports.readpublicadress = () => {
   return contentadress;
 };
 
-function wait(milleseconds) {
-  return new Promise(resolve => setTimeout(resolve, milleseconds));
-}
-
-
-/*  function getTransactionReceiptPromise(hash) {
-  // here we just promisify getTransactionReceipt function for convenience
-  return new Promise(((resolve, reject) => {
-    web3js.eth.getTransaction(hash, (err, data) => {
-      if (err !== null) reject(err);
-      else resolve(data);
-    });
-  }));
-}  */
-
 async function getBalance(address) {
   return new Promise((resolve, reject) => {
     web3js.eth.getBalance(address, (error, result) => {
@@ -110,43 +95,27 @@ async function getBalanceCorrect() {
   return ether;
 }
 
-/*  async function getTransactionCorrect(transHash) {
-  let receipt = null;
-  try {
-    while (receipt === null) {
-      // we are going to check every second if transation is mined or not, once it is mined we'll leave the loop
-      receipt = await getTransactionReceiptPromise(transHash);
-      console.log('receipt inside loop');
-      await wait(1000);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-  console.log('from function result', receipt);
-  return receipt;
-}     */
-
-//module.exports.returnTransDetails = transactionHash => getTransactionCorrect(transactionHash);
+/**
+ * @param {void}
+ * @returns {String} Amount of ether in dedicated wallet
+ */
 module.exports.returnBalance = () => getBalanceCorrect();
 
+/**
+ * @param {String}
+ * @returns {Object} Transaction details
+ */
 module.exports.readTransactionCorrect = hash => new Promise((resolve, reject) => {
   web3js.eth.getTransaction(hash, (err, data) => {
-    if (err !== null) {reject(err);
-    console.log('inside promise readtransaction') }
-    else resolve(data);
-  });
-});
-
-module.exports.readTransactionCorrectBlock = (hashStringOrNumber, index) => new Promise((resolve, reject) => {
-  web3js.eth.getTransactionFromBlock(hashStringOrNumber, index, (err, data) => {
-    if (err) {
-      reject({err: err, data: data});
-      console.log('inside promise readTransactionCorrectBlock Reject');
+    if (err) { 
+      reject({err:err, data: data});
+      console.log('inside promise readtransaction');
     } else {
       resolve(data);
     }
   });
 });
+
 
 //https://medium.com/@piyopiyo/generating-an-ethereum-wallet-with-an-existing-private-key-5cda690a8eb8
 //https://medium.com/coinmonks/ethereum-tutorial-sending-transaction-via-nodejs-backend-7b623b885707

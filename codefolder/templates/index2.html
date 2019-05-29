@@ -49,7 +49,7 @@
                               <!-- <input class="tbox" name="fname" style="font-size:20px;" autofocus name="A" type="text" id="cardValue" placeholder="Please input your wallet adress" size="40" > -->
                               <!-- <input class="btn" id="presspay" type="submit" value="Pay ether"> -->
                     <button class="btn" type="button" name="button" onclick="return payEther()">Pay ether</button>
-                    <button class="btn" type="button" name="button" onclick="return testServer()">Test Server</button>
+                <!--    <button class="btn" type="button" name="button" onclick="return testServer()">Test Server</button> -->
                  </div>
             </td>
             <td ></td>
@@ -65,7 +65,11 @@
         <tr>
             <td colspan="3"><label id="transactionResultFromServer" class="transhash"></label></td>
         </tr>
-
+        <tr>
+            <td ><label id="downloadlinkdescription" class="transhash">Use cureent link to download file : </label></td>
+            <td ><label id="downloadlink" class="transhash">Transaction succeeded</label></td>
+            <td ></td>
+        </tr>
 
     </table>
 </form>
