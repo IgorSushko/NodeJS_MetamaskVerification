@@ -11,7 +11,7 @@ async function getUrlFromServer() {
   return json.bookurl;
 }
 
-async function changeStateFlag() {
+async function generateDownloadLink() {
   const link = await getUrlFromServer();
   console.log('link: ', link);
   const str = 'Press here to download';
@@ -104,7 +104,7 @@ async function payEther() {
       let transactionResultS = parseTransaction(data);
       document.getElementById('transactionResultFromServer').style.visibility = 'visible';
       document.getElementById('transactionResultFromServer').innerText ='Verification from server :  ' + transactionResultS.toString();
-      if (transactionResultS == 'Transaction approved by server') { changeStateFlag() };
+      if (transactionResultS == 'Transaction approved by server') { generateDownloadLink() };
     })
 
     socket.emit('Receipt', { Receipt: receipt });
